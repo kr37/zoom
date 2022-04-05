@@ -1,3 +1,4 @@
 .htaccess
 php_error.log
 Zoom/Config.php
+error_log
