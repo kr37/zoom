@@ -21,7 +21,7 @@ function datefmt($datestr){
     if ($time < 1577833200) { // Prior to 2020 (bogus date)
         return '';
     } else {
-        return date('D,&\n\b\s\p;M&\n\b\s\pj,&\n\b\s\p'."'y g:i a",strtotime($datestr)-3600*8);
+        return date('D,&\n\b\s\p;M&\n\b\s\pj,&\n\b\s\p'."'y g:i a",strtotime($datestr));
     }
 }
 
