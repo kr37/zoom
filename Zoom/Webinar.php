@@ -4,7 +4,7 @@ namespace Zoom;
 use Zoom\Client;
 use Zoom\Config;
 
-class Meeting
+class Webinar
 {
     private $client;
     public $zoomError;
@@ -30,87 +30,12 @@ class Meeting
         }
     }
 
-    public function create($meetingDetails)
-    {
-        $response = $this->client->doRequest(
-            'POST',
-            '/users/{userId}/meetings',
-            [],
-            ['userId' => $this->getUserId()],
-            json_encode($meetingDetails)
-        );
-
-        if ($this->client->responseCode() == 201) {
-            return $response;
-        } else {
-            $this->zoomError = $response;
-            return false;
-        }
-    }
-
-    public function update($meetingDetails, $meetingId)
-    {
-        $response = $this->client->doRequest(
-            'PATCH',
-            '/meetings/{meetingId}',
-            [],
-            ['meetingId' => $meetingId],
-            json_encode($meetingDetails)
-        );
-
-        if ($this->client->responseCode() == 204) {
-            return $response;
-        } else {
-            $this->zoomError = $response;
-
-            return false;
-        }
-    }
-
-    public function delete($meetingId)
-    {
-        $response = $this->client->doRequest(
-            'DELETE',
-            '/meetings/{meetingId}',
-            [],
-            ['meetingId' => $meetingId],
-            []
-        );
-
-        if ($this->client->responseCode() == 204) {
-            return $response;
-        } else {
-            $this->zoomError = $response;
-
-            return false;
-        }
-    }
-
-    public function end($meetingId)
-    {
-        $response = $this->client->doRequest(
-            'PUT',
-            '/meetings/{meetingId}/status',
-            [],
-            ['meetingId' => $meetingId],
-            json_encode(['action' => 'end'])
-        );
-
-        if ($this->client->responseCode() == 204) {
-            return $response;
-        } else {
-            $this->zoomError = $response;
-
-            return false;
-        }
-    }
-
-    public function list()
+    public function list($paramArray = [])
     {
         $response = $this->client->doRequest(
             'GET',
-            '/users/{userId}/meetings',
-            [],
+            '/users/{userId}/webinars',
+            $paramArray,
             ['userId' => $this->getUserId()],
             json_encode(['action' => 'end'])
         );
@@ -123,13 +48,13 @@ class Meeting
         }
     }
 
-    public function listParticipants($meetingUUID)
+    public function instances($webinarId)
     {
         $response = $this->client->doRequest(
             'GET',
-            '/past_meetings/{meetingUUID}/participants',
+            '/past_webinars/{webinarId}/instances',
             [],
-            ['meetingUUID' => $meetingUUID],
+            ['webinarId' => $webinarId],
             json_encode(['action' => 'end'])
         );
 
@@ -141,13 +66,14 @@ class Meeting
         }
     }
 
-    public function listRegistrants($meetingId)
+
+    public function listParticipants($webinarId)
     {
         $response = $this->client->doRequest(
             'GET',
-            '/meetings/{meetingId}/registrants',
+            '/past_webinars/{webinarId}/participants',
             [],
-            ['meetingId' => $meetingId],
+            ['webinarId' => $webinarId],
             json_encode(['action' => 'end'])
         );
 
@@ -155,7 +81,6 @@ class Meeting
             return $response;
         } else {
             $this->zoomError = $response;
-
             return false;
         }
     }
