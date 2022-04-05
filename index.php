@@ -12,6 +12,7 @@
 
 <?php
 require_once './Zoom/Index.php';
+include_once './env.php';
 use Zoom\Meeting;
 use Zoom\Webinar;
 
@@ -78,16 +79,15 @@ function niceParticipants($partiers) {
     if ($partiers !== false) {
         $participants = $partiers['participants'];
         $partsUnique = unique_multidim_array($participants, 'name');
+        $count = count($partsUnique);
         array_multisort(array_column($participants, 'name'), SORT_ASC, $participants);
     } else {
-        $parts = [];
+        $participants = [];
+        $count = 0;
     }
-    $count = count($partsUnique);
     $export = "<b>$count</b> unique. <b>All</b>:  ";
     foreach ($participants as $p)
         $export .= "$p[name], ";
-    //$export .= var_export($participants, true);
-    
     return substr($export,0,-2);
 }
 
