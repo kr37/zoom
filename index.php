@@ -40,7 +40,7 @@ $webinar = new Webinar();
 
 $i = 0;
 $list = $webinar->list(['page_size' => '300', 'to' => date('Y-m-d')]);
-foreach ($list['webinars'] as $m) {
+foreach (array_reverse($list['webinars']) as $m) {
     $i++;
     $instances = $webinar->instances($m['id']);
     $partiers = niceParticipants($webinar->listParticipants($m['id']));
@@ -76,15 +76,18 @@ echo "    </tbody>\n</table>\n";
 
 function niceParticipants($partiers) {
     if ($partiers !== false) {
-        $parts = unique_multidim_array($partiers['participants'],'name');
+        $participants = $partiers['participants'];
+        $partsUnique = unique_multidim_array($participants, 'name');
+        array_multisort(array_column($participants, 'name'), SORT_ASC, $participants);
     } else {
         $parts = [];
     }
-    array_multisort(array_column($parts, 'name'), SORT_ASC, $parts);
-    $count = count($parts);
-    $export = "<b>$count:</b>  ";
-    foreach ($parts as $p)
+    $count = count($partsUnique);
+    $export = "<b>$count</b> unique. <b>All</b>:  ";
+    foreach ($participants as $p)
         $export .= "$p[name], ";
+    //$export .= var_export($participants, true);
+    
     return substr($export,0,-2);
 }
 
