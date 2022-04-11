@@ -66,7 +66,7 @@ echo <<<TABLE
 TABLE;
 $meeting = new Meeting();
 $list = $meeting->list();
-foreach ($list['meetings'] as $m) {
+foreach (array_reverse($list['meetings']) as $m) {
     $partiers = niceParticipants($meeting->listParticipants($m['id']));
     $start = array_key_exists('start_time', $m) ? datefmt($m['start_time']) : '';
     $link = "<a href='$m[join_url]' target='_blank'>Start or join</a>";
